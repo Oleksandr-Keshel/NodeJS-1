@@ -1,6 +1,7 @@
 const authorService = require('../services/authors.service');
+const createError = require('http-errors');
 
-async function createAuthor(req, res){
+async function createAuthor(req, res, next){
     try{
         const newAuthor = await authorService.create(req.body);
 
@@ -9,15 +10,11 @@ async function createAuthor(req, res){
             data: newAuthor,
         });
     } catch(err){
-        console.log(err);
-        res.status(500).json({
-            status: 500,
-            error: err,
-        });
+        next(createError.InternalServerError(err.message));
     }
 };
 
-async function getAuthors(req, res) {
+async function getAuthors(req, res, next) {
     try {
         queryName = req.query.name
         res.status(200).json({
@@ -25,15 +22,11 @@ async function getAuthors(req, res) {
             data: await authorService.find(queryName),
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: 500,
-            error: err,
-        });
+        next(createError.InternalServerError(err.message));
     }
 };
 
-async function getAuthor(req, res) {
+async function getAuthor(req, res, next) {
     try {
         const { authorId } = req.params;
         const author = await authorService.findById(authorId);
@@ -50,16 +43,12 @@ async function getAuthor(req, res) {
             data: author,
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: 500,
-            error: err,
-        });
+        next(createError.InternalServerError(err.message));
     }
 };
 
 
-async function updateAuthor(req, res) {
+async function updateAuthor(req, res, next) {
     try {
         const { authorId } = req.params;
         const authorData = req.body;
@@ -77,16 +66,12 @@ async function updateAuthor(req, res) {
             data: updatedAuthor
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: 500,
-            error: err,
-        });
+        next(createError.InternalServerError(err.message));
     }
 };
 
 
-async function deleteAuthor(req, res) {
+async function deleteAuthor(req, res, next) {
     try {
         const { authorId } = req.params;
         await authorService.findByIdAndDelete(authorId);
@@ -95,11 +80,7 @@ async function deleteAuthor(req, res) {
             status: 200,
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: 500,
-            error: err,
-        });
+        next(createError.InternalServerError(err.message));
     }
 };
 

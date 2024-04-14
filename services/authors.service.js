@@ -1,6 +1,5 @@
 const authorModel = require('../models/author.model');
 
-
 async function create(author) {
     return authorModel.create(author);
 }
