@@ -71,7 +71,8 @@ async function updateAuthor(req, res, next) {
 };
 
 
-async function deleteAuthor(req, res, next) {
+async function deleteAuthor(req, res, next
+) {
     try {
         const { authorId } = req.params;
         await authorService.findByIdAndDelete(authorId);

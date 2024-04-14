@@ -26,11 +26,16 @@ async function findByIdAndDelete(id) {
     return authorModel.findByIdAndDelete(id);
 };
 
+async function findOne(filter) {
+    return authorModel.findOne(filter);
+}
+
 
 module.exports = {
     create,
     find,
     findById,
     findByIdAndUpdate,
-    findByIdAndDelete
+    findByIdAndDelete,
+    findOne
 };
