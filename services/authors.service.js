@@ -1,44 +1,30 @@
-const data = require('../data/authors');
+const authorModel = require('../models/author.model');
 
-function _generateId() {
-    const crypto = require("crypto");
-    return crypto.randomBytes(16).toString("hex");
-}
 
 async function create(author) {
-    const newAuthor = { id: _generateId(), ...author };
-    data.authors.push(newAuthor);
-
-    return newAuthor;
+    return authorModel.create(author);
 }
 
-async function find({ searchString = '', page = 1, perPage = Number.MAX_SAFE_INTEGER }) {
-    searchString = searchString?.toLowerCase();
-    const searchResult = data.authors.filter(a => a.name?.toLowerCase().includes(searchString));
-
+async function find(searchString = '', page = 1, perPage = 20) {
+    const filter = { 
+        name: {$regex: `${searchString}`, $options: 'i' },
+    }
     return {
-        items: searchResult.slice((page - 1)*perPage, page * perPage),
-        count: searchResult.length,
+        items: await authorModel.find(filter).skip((page - 1) * perPage).limit(Number(perPage)),
+        count: await authorModel.countDocuments(filter),
     }
 }
 
 async function findById(id) {
-    return data.authors.find(a => a.id == id);
+    return authorModel.findById(id);
 }
 
-async function update(authorId, authorData) {
-    const index = data.authors.findIndex(a => a.id === authorId);
+async function findByIdAndUpdate(id, update) {
+    return authorModel.findByIdAndUpdate(id, update, { upsert: false, new: true });
+}
 
-    if (index === -1) return;
-
-    const updatedAuthor = { ...data.authors[index], ...authorData, id: authorId };
-
-    data.authors[index] = updatedAuthor;
-    return updatedAuthor;
-};
-
-async function remove(id) {
-    data.authors = data.authors.filter(a => a.id != id);
+async function findByIdAndDelete(id) {
+    return authorModel.findByIdAndDelete(id);
 };
 
 
@@ -46,6 +32,6 @@ module.exports = {
     create,
     find,
     findById,
-    update,
-    remove
+    findByIdAndUpdate,
+    findByIdAndDelete
 };

@@ -19,9 +19,10 @@ async function createAuthor(req, res){
 
 async function getAuthors(req, res) {
     try {
+        queryName = req.query.name
         res.status(200).json({
             status: 200,
-            data: await authorService.find(req.query),
+            data: await authorService.find(queryName),
         });
     } catch (err) {
         console.error(err);
@@ -62,7 +63,7 @@ async function updateAuthor(req, res) {
     try {
         const { authorId } = req.params;
         const authorData = req.body;
-        const updatedAuthor = await authorService.update(authorId, authorData);
+        const updatedAuthor = await authorService.findByIdAndUpdate(authorId, authorData);
 
         if (!updatedAuthor) {
             return res.status(400).json({
@@ -88,7 +89,7 @@ async function updateAuthor(req, res) {
 async function deleteAuthor(req, res) {
     try {
         const { authorId } = req.params;
-        await authorService.remove(authorId);
+        await authorService.findByIdAndDelete(authorId);
 
         res.status(200).json({
             status: 200,
