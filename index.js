@@ -1,7 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const createError = require('http-errors');
-const authorRouter = require('./routes/authors.route');
+
+const authorsRouter = require('./routes/authors.route');
+const usersRouter = require('./routes/users.route');
+const authRouter = require('./routes/auth.route');
+
+
 const app = express();
 const PORT = process.env.PORT || 3003;
 
@@ -27,7 +35,10 @@ app.get('/', (req, res) => {
   })
 });
 
-app.use("/authors", authorRouter);
+app.use("/authors", authorsRouter);
+app.use("/users", usersRouter);
+app.use("/auth", authRouter);
+
 
 //Сatching the 404 and forwarding to the Error handler
 app.use((req, res, next) => {
@@ -47,3 +58,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
 });
+
+

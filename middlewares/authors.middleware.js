@@ -1,8 +1,7 @@
 const createError = require('http-errors');
 const ObjectId = require('mongoose').Types.ObjectId;
 const authorService = require('../services/authors.service');
-const authorModel = require('../models/author.model');
-const {AuthorCreateSchema, AuthorUpdateSchema} = require('../joi_validation_schemas/authors.shemas')
+const {AuthorCreateSchema, AuthorUpdateSchema} = require('../joi_validation_schemas/authors.schemas')
 
 async function authorByIdValidation(req, res, next) {
     try {
