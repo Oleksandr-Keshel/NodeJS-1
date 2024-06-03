@@ -17,7 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 6,
-    }
+    },
+    lastLoginAt: {
+        type: Date,
+    },
 },  {
     timestamps: true
 });
