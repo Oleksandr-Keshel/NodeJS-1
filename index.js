@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const createError = require('http-errors');
 
+const startScheduleJobs = require('./jobs');
+
 const authorsRouter = require('./routes/authors.route');
 const usersRouter = require('./routes/users.route');
 const authRouter = require('./routes/auth.route');
@@ -15,7 +17,9 @@ const PORT = process.env.PORT || 3003;
 
 mongoose
   .connect('mongodb://127.0.0.1:27017/authors&articles')
-  .then(() => console.log('Connected to DB'))
+  .then(() => {
+    console.log('Connected to DB');
+    startScheduleJobs();})
   .catch((err) => console.log(err));
 
 app.use(express.urlencoded({extended: true}));

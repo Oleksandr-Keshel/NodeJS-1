@@ -16,15 +16,13 @@ function startUserLoginReminderJob() {
                     { lastLoginAt: { $lt: date } }
             ]});
 
-            // send reminder email
             users.forEach(user => {
                 console.log(`[userLoginReminder.job] Todo send reminder email for: ${user.email}`);
             });
 
-            // or create report file
             const columns = {
                 id: 'id',
-                email: 'Name'
+                email: 'Email'
             };
             const rows = users.map(user => ([user.id, user.email]));
             try {
