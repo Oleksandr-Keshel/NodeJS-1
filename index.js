@@ -5,6 +5,8 @@ const authorRouter = require('./routes/authors.route');
 const app = express();
 const PORT = process.env.PORT || 3003;
 
+app.use(express.static('public'));
+
 mongoose
   .connect('mongodb://127.0.0.1:27017/authors&articles')
   .then(() => console.log('Connected to DB'))

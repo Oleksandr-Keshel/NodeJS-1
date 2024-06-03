@@ -6,6 +6,9 @@ const authorSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    profilePicture: {
+        type: String,
+    },
     address: {
         type: String,
         required: true,

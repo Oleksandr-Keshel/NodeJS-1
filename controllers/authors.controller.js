@@ -1,5 +1,9 @@
 const authorService = require('../services/authors.service');
 const createError = require('http-errors');
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+const deleteFileAsync = promisify(fs.unlink);
 
 async function createAuthor(req, res, next){
     try{
@@ -71,7 +75,8 @@ async function updateAuthor(req, res, next) {
 };
 
 
-async function deleteAuthor(req, res, next) {
+async function deleteAuthor(req, res, next
+) {
     try {
         const { authorId } = req.params;
         await authorService.findByIdAndDelete(authorId);
@@ -84,10 +89,46 @@ async function deleteAuthor(req, res, next) {
     }
 };
 
+async function updateAuthorProfilePicture(req, res, next) {
+    try {
+        const { authorId } = req.params;
+
+        console.log(req.file);
+
+        // delete previous picture
+        const author = await authorService.findById(authorId);
+        if (author.profilePicture) {
+            const filePath = path.join(__dirname, '..', 'public', 'profilePictures', author.profilePicture);
+            await deleteFileAsync(filePath);
+        }
+
+        // update
+        authorService.findByIdAndUpdate(authorId, { profilePicture: req.file.filename });
+
+        res.status(200).json({
+            status: 200,
+        });
+    } catch(err) {
+        next(createError.InternalServerError(err.message));
+    }
+};
+
+async function uploadAuthors(req, res, next) {
+    try {
+        console.log(req.file);
+        const jsonData = JSON.parse(req.file.buffer.toString());
+        res.json(jsonData);
+    } catch(err) {
+        next(createError.InternalServerError(err.message));
+    }
+}
+
 module.exports = {
     createAuthor,
     getAuthors,
     getAuthor,
     updateAuthor,
-    deleteAuthor
+    deleteAuthor,
+    updateAuthorProfilePicture,
+    uploadAuthors
 };
